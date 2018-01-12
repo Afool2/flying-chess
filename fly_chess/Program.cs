@@ -12,7 +12,8 @@ namespace fly_chess
         static int[] _Maps = new int[100];
         //静态数组存储玩家A和B的位置
         static int[] _PlayerPos = { 0, 0 };
-
+        // 静态数组存储2个玩家的姓名
+        static string[] _PlayersNames = { null, null };
         static void Main(string[] args)
         {
             ShowHeadText();
