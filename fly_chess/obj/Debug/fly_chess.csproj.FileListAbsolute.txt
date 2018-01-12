@@ -1,0 +1,6 @@
+C:\Users\Administrator.PC-201707021624\Desktop\c# project\fly_chess\fly_chess\bin\Debug\fly_chess.exe.config
+C:\Users\Administrator.PC-201707021624\Desktop\c# project\fly_chess\fly_chess\bin\Debug\fly_chess.exe
+C:\Users\Administrator.PC-201707021624\Desktop\c# project\fly_chess\fly_chess\bin\Debug\fly_chess.pdb
+C:\Users\Administrator.PC-201707021624\Desktop\c# project\fly_chess\fly_chess\obj\Debug\fly_chess.exe
+C:\Users\Administrator.PC-201707021624\Desktop\c# project\fly_chess\fly_chess\obj\Debug\fly_chess.pdb
+C:\Users\Administrator.PC-201707021624\Desktop\c# project\fly_chess\fly_chess\obj\Debug\fly_chess.csprojResolveAssemblyReference.cache
