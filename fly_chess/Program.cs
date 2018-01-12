@@ -67,18 +67,10 @@ namespace fly_chess
         public static string GetPattenStr(int i)
         {
             //玩家A和玩家B的位置相同，并且位置都在地图上时，画<>
-            if (_PlayerPos[0] == _PlayerPos[1] && _PlayerPos[0] == i)
-            {
-                return "<>";
-            }
-            else if (_PlayerPos[0] == i) // 如果i等于玩家A的位置,画A
-            {
-                return "Ａ"; // 全角状态下的字符，占2个半角字符
-            }
-            else if (_PlayerPos[1] == i) // 如果i等于玩家B的位置，画B
-            {
-                return "Ｂ";
-            }
+            if (_PlayerPos[0] == _PlayerPos[1] && _PlayerPos[0] == i) return "<>";
+            // 如果i等于玩家A的位置,画A.(全角状态下的字符，占2个半角字符)
+            else if (_PlayerPos[0] == i) return "Ａ";
+            else if (_PlayerPos[1] == i) return "Ｂ"; // 如果i等于玩家B的位置，画B
             else // 画地图
             {
                 switch (_Maps[i])
@@ -123,8 +115,15 @@ namespace fly_chess
             Console.WriteLine();
             #endregion
 
-            for(int i=35;i<65;i++) Console.Write(GetPattenStr(i));
+            // 画第二横行
+            for(int i = 64; i >= 35; i--) Console.Write(GetPattenStr(i));
+            Console.WriteLine();
 
+            // 画第二竖行
+            for (int i = 65; i < 70; i++) Console.WriteLine(GetPattenStr(i));
+
+            // 画第三横行
+            for(int i = 70; i < 100; i++) Console.Write(GetPattenStr(i));
         }
 
         
