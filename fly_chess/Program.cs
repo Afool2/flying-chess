@@ -60,27 +60,6 @@ namespace fly_chess
         }
 
         /// <summary>
-        /// 画地图
-        /// </summary>
-        public static void DrawMap()
-        {
-            // 画第一横行
-            for (int i = 0; i < 30; i++) Console.Write(GetPattenStr(i));
-
-            // 画第一竖行
-            for (int i = 30; i < 35; i++)
-            {
-                Console.WriteLine();
-                for(int j = 0; j < 29; j++)
-                {
-                    Console.Write("　");
-                }
-                Console.Write(GetPattenStr(i));
-            }
-            
-        }
-
-        /// <summary>
         /// 获取地图索引对应的图案字符串
         /// </summary>
         /// <param name="i">地图索引</param>
@@ -122,5 +101,32 @@ namespace fly_chess
                 }
             }
         }
+
+        /// <summary>
+        /// 画地图
+        /// </summary>
+        public static void DrawMap()
+        {
+            // 画第一横行
+            for (int i = 0; i < 30; i++) Console.Write(GetPattenStr(i));
+
+            #region 画第一竖行
+            for (int i = 30; i < 35; i++)
+            {
+                Console.WriteLine();
+                for(int j = 0; j < 29; j++)
+                {
+                    Console.Write("　");
+                }
+                Console.Write(GetPattenStr(i));
+            }
+            Console.WriteLine();
+            #endregion
+
+            for(int i=35;i<65;i++) Console.Write(GetPattenStr(i));
+
+        }
+
+        
     }
 }
