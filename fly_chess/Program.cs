@@ -65,7 +65,7 @@ namespace fly_chess
         public static void DrawMap()
         {
             // 画第一横行
-            for (int i = 0; i < 30; i++) GetPattenStr(i);
+            for (int i = 0; i < 30; i++) Console.Write(GetPattenStr(i));
 
             // 画第一竖行
             for (int i = 30; i < 35; i++)
@@ -75,15 +75,16 @@ namespace fly_chess
                 {
                     Console.Write("　");
                 }
-                GetPattenStr(i);
+                Console.Write(GetPattenStr(i));
             }
             
         }
 
         /// <summary>
-        /// 画图案
+        /// 获取地图索引对应的图案字符串
         /// </summary>
-        /// <param name="i">地图数组的索引</param>
+        /// <param name="i">地图索引</param>
+        /// <returns>字符串</returns>
         public static string GetPattenStr(int i)
         {
             //玩家A和玩家B的位置相同，并且位置都在地图上时，画<>
