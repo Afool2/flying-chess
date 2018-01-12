@@ -65,7 +65,7 @@ namespace fly_chess
         public static void DrawMap()
         {
             // 画第一横行
-            for (int i = 0; i < 30; i++) DrawPatten(i);
+            for (int i = 0; i < 30; i++) GetPattenStr(i);
 
             // 画第一竖行
             for (int i = 30; i < 35; i++)
@@ -75,7 +75,7 @@ namespace fly_chess
                 {
                     Console.Write("　");
                 }
-                DrawPatten(i);
+                GetPattenStr(i);
             }
             
         }
@@ -84,20 +84,20 @@ namespace fly_chess
         /// 画图案
         /// </summary>
         /// <param name="i">地图数组的索引</param>
-        public static void DrawPatten(int i)
+        public static string GetPattenStr(int i)
         {
             //玩家A和玩家B的位置相同，并且位置都在地图上时，画<>
             if (_PlayerPos[0] == _PlayerPos[1] && _PlayerPos[0] == i)
             {
-                Console.Write("<>");
+                return "<>";
             }
             else if (_PlayerPos[0] == i) // 如果i等于玩家A的位置,画A
             {
-                Console.Write("Ａ"); // 全角状态下的字符，占2个半角字符
+                return "Ａ"; // 全角状态下的字符，占2个半角字符
             }
             else if (_PlayerPos[1] == i) // 如果i等于玩家B的位置，画B
             {
-                Console.Write("Ｂ");
+                return "Ｂ";
             }
             else // 画地图
             {
@@ -105,24 +105,19 @@ namespace fly_chess
                 {
                     case 1:
                         Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.Write("◎");
-                        break;
+                        return "◎";
                     case 2:
                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("☆");
-                        break;
+                        return "☆";
                     case 3:
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("▲");
-                        break;
+                        return "▲";
                     case 4:
                         Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write("卐");
-                        break;
+                        return "卐";
                     default:
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("□");
-                        break;
+                        return "□";
                 }
             }
         }
