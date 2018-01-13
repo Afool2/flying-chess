@@ -167,7 +167,10 @@ namespace fly_chess
             Console.WriteLine();
         }
 
-
+        /// <summary>
+        /// 游戏主逻辑
+        /// </summary>
+        /// <param name="playerIndex">玩家在_PlayerPos中的索引</param>
         public static void PlayGame(int playerIndex)
         {
             Console.WriteLine("玩家{0}按任意键开始掷骰子", _PlayersNames[playerIndex]);
