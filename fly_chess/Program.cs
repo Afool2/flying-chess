@@ -14,26 +14,36 @@ namespace fly_chess
         static int[] _PlayerPos = { 0, 0 };
         // 静态数组存储2个玩家的姓名
         static string[] _PlayersNames = { null, null };
+        // 用于判断玩家是否暂停一回合
+        static bool[] _PlayersFlag = { true, true };
         static void Main(string[] args)
         {
             ShowHeadText();
-            InitialMap();
-            DrawMap();
-
+            #region 输入玩家名称
             Console.WriteLine("请输入玩家A的名称");
             _PlayersNames[0] = Console.ReadLine();
             while (_PlayersNames[0] == "")
             {
-                Console.WriteLine("玩家A的名称不能为空！ 请重新输入");
+                Console.WriteLine("玩家A的名称不能为空！请重新输入");
                 _PlayersNames[0] = Console.ReadLine();
             }
+            Console.WriteLine("请输入玩家B的名称");
+            _PlayersNames[1] = Console.ReadLine();
+            while (_PlayersNames[1] == "" || _PlayersNames[1] == _PlayersNames[0])
+            {
+                Console.WriteLine("玩家B的名称不能{0}！请重新输入", _PlayersNames[1] == "" ? "为空" : "与玩家A相同");
+                _PlayersNames[1] = Console.ReadLine();
+            }
+            #endregion
+            InitialMap();
+            DrawMap();
 
             while (true)
             {
                 PlayGame(0);
                 PlayGame(1);
             }
-            
+
 
 
             Console.ReadKey();
@@ -54,7 +64,7 @@ namespace fly_chess
             Console.WriteLine("****************************");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("****************************");
-            
+
         }
 
         /// <summary>
@@ -116,6 +126,7 @@ namespace fly_chess
         /// </summary>
         public static void DrawMap()
         {
+            Console.WriteLine("图例:   幸运轮盘◎   地雷☆   暂停▲   时空隧道卐");
             // 画第一横行
             for (int i = 0; i < 30; i++) Console.Write(GetPattenStr(i));
 
@@ -123,7 +134,7 @@ namespace fly_chess
             for (int i = 30; i < 35; i++)
             {
                 Console.WriteLine();
-                for(int j = 0; j < 29; j++)
+                for (int j = 0; j < 29; j++)
                 {
                     Console.Write("　");
                 }
@@ -133,21 +144,74 @@ namespace fly_chess
             #endregion
 
             // 画第二横行
-            for(int i = 64; i >= 35; i--) Console.Write(GetPattenStr(i));
+            for (int i = 64; i >= 35; i--) Console.Write(GetPattenStr(i));
             Console.WriteLine();
 
             // 画第二竖行
             for (int i = 65; i < 70; i++) Console.WriteLine(GetPattenStr(i));
 
             // 画第三横行
-            for(int i = 70; i < 100; i++) Console.Write(GetPattenStr(i));
+            for (int i = 70; i < 100; i++) Console.Write(GetPattenStr(i));
+            Console.WriteLine();
         }
 
 
         public static void PlayGame(int playerIndex)
         {
-
+            
+            Console.WriteLine("玩家{0}按任意键开始掷骰子", _PlayersNames[playerIndex]);
+            Console.ReadKey(true);
+            Random r = new Random();
+            int x = r.Next(1, 7);
+            Console.WriteLine("玩家{0}掷出了{1},按任意键开始行动", _PlayersNames[playerIndex], x);
+            Console.ReadKey(true);
+            _PlayerPos[playerIndex] += x;
+            if(_PlayerPos[playerIndex]== _PlayerPos[1 - playerIndex]) // 踩到了对方
+            {
+                Console.WriteLine("玩家{0}踩到了玩家{1},玩家{1}退6格", _PlayersNames[playerIndex], _PlayersNames[1 - playerIndex]);
+                _PlayerPos[1 - playerIndex] -= 6;
+            }
+            else //没有踩到对方
+            {
+                switch (_Maps[_PlayerPos[playerIndex]])
+                {
+                    case 1: //踩到幸运轮盘
+                        Console.WriteLine("玩家{0}踩到了幸运轮盘\n请选择： 1---和玩家{1}交换位置  2---轰炸对方，使之退6格", _PlayerPos[playerIndex], _PlayerPos[1 - playerIndex]);
+                        string option = Console.ReadLine();
+                        while (option != "1" && option != "2")
+                        {
+                            Console.WriteLine("输入错误！请重新输入: 1---交换位置  2---轰炸对方");
+                            option = Console.ReadLine();
+                        }
+                        if (option == "1")
+                        {
+                            int temp = _PlayerPos[playerIndex];
+                            _PlayerPos[playerIndex] = _PlayerPos[1 - playerIndex];
+                            _PlayerPos[1 - playerIndex] = temp;
+                        }
+                        else _PlayerPos[1 - playerIndex] -= 6;
+                        break;
+                    case 2: // 踩到地雷(退6格)
+                        _PlayerPos[playerIndex] -= 6;
+                        break;
+                    case 3: // 暂停
+                        _PlayersFlag[playerIndex] = false;
+                        break;
+                    case 4: //时空隧道
+                        _PlayerPos[playerIndex] += 10;
+                        break;
+                    default:
+                        Console.WriteLine("玩家{0}踩到了普通方块", _PlayersNames[playerIndex]);
+                        break;
+                }
+            }
+            #region 任一玩家的位置后退出地图时(位置<0)，回到地图原点
+            if (_PlayerPos[playerIndex] < 0) _PlayerPos[playerIndex] = 0;
+            if (_PlayerPos[1 - playerIndex] < 0) _PlayerPos[1 - playerIndex] = 0;
+            #endregion
+            Console.Clear();
+            DrawMap();
         }
-        
+
     }
 }
