@@ -17,7 +17,7 @@ namespace fly_chess
         // 用于判断玩家是否暂停一回合
         static bool[] _PlayersFlag = { true, true };
         static void Main(string[] args)
-        {
+        { 
             ShowHeadText();
             #region 输入玩家名称
             Console.WriteLine("请输入玩家A的名称");
@@ -40,12 +40,23 @@ namespace fly_chess
 
             while (true)
             {
-                PlayGame(0);
-                PlayGame(1);
+                if (_PlayersFlag[0]) PlayGame(0);
+                else _PlayersFlag[0] = true;
+                if (_PlayerPos[0] >= 99)
+                {
+                    Console.WriteLine("玩家{0}无耻地赢了玩家{1}", _PlayersNames[0], _PlayersNames[1]);
+                    break;
+                }
+
+                if (_PlayersFlag[1]) PlayGame(1);
+                else _PlayersFlag[1] = true;
+                if (_PlayerPos[1] >= 99)
+                {
+                    Console.WriteLine("玩家{0}无耻地赢了玩家{1}", _PlayersNames[1], _PlayersNames[0]);
+                    break;
+                }
             }
-
-
-
+            Win(); // 显示胜利文字
             Console.ReadKey();
         }
 
@@ -129,7 +140,7 @@ namespace fly_chess
             Console.WriteLine("图例:   幸运轮盘◎   地雷☆   暂停▲   时空隧道卐");
             // 画第一横行
             for (int i = 0; i < 30; i++) Console.Write(GetPattenStr(i));
-
+            
             #region 画第一竖行
             for (int i = 30; i < 35; i++)
             {
@@ -153,12 +164,12 @@ namespace fly_chess
             // 画第三横行
             for (int i = 70; i < 100; i++) Console.Write(GetPattenStr(i));
             Console.WriteLine();
+            Console.WriteLine();
         }
 
 
         public static void PlayGame(int playerIndex)
         {
-            
             Console.WriteLine("玩家{0}按任意键开始掷骰子", _PlayersNames[playerIndex]);
             Console.ReadKey(true);
             Random r = new Random();
@@ -173,44 +184,79 @@ namespace fly_chess
             }
             else //没有踩到对方
             {
-                switch (_Maps[_PlayerPos[playerIndex]])
+                try
                 {
-                    case 1: //踩到幸运轮盘
-                        Console.WriteLine("玩家{0}踩到了幸运轮盘\n请选择： 1---和玩家{1}交换位置  2---轰炸对方，使之退6格", _PlayerPos[playerIndex], _PlayerPos[1 - playerIndex]);
-                        string option = Console.ReadLine();
-                        while (option != "1" && option != "2")
-                        {
-                            Console.WriteLine("输入错误！请重新输入: 1---交换位置  2---轰炸对方");
-                            option = Console.ReadLine();
-                        }
-                        if (option == "1")
-                        {
-                            int temp = _PlayerPos[playerIndex];
-                            _PlayerPos[playerIndex] = _PlayerPos[1 - playerIndex];
-                            _PlayerPos[1 - playerIndex] = temp;
-                        }
-                        else _PlayerPos[1 - playerIndex] -= 6;
-                        break;
-                    case 2: // 踩到地雷(退6格)
-                        _PlayerPos[playerIndex] -= 6;
-                        break;
-                    case 3: // 暂停
-                        _PlayersFlag[playerIndex] = false;
-                        break;
-                    case 4: //时空隧道
-                        _PlayerPos[playerIndex] += 10;
-                        break;
-                    default:
-                        Console.WriteLine("玩家{0}踩到了普通方块", _PlayersNames[playerIndex]);
-                        break;
+                    switch (_Maps[_PlayerPos[playerIndex]])
+                    {
+                        case 1: //踩到幸运轮盘
+                            Console.WriteLine("玩家{0}踩到了幸运轮盘\n请选择： 1---和玩家{1}交换位置  2---轰炸对方，使之退6格", _PlayersNames[playerIndex], _PlayersNames[1 - playerIndex]);
+                            string option = Console.ReadLine();
+                            while (option != "1" && option != "2")
+                            {
+                                Console.WriteLine("输入错误！请重新输入: 1---交换位置  2---轰炸对方");
+                                option = Console.ReadLine();
+                            }
+                            if (option == "1")
+                            {
+                                int temp = _PlayerPos[playerIndex];
+                                _PlayerPos[playerIndex] = _PlayerPos[1 - playerIndex];
+                                _PlayerPos[1 - playerIndex] = temp;
+                            }
+                            else _PlayerPos[1 - playerIndex] -= 6;
+                            break;
+                        case 2:
+                            Console.WriteLine("玩家{0}踩到了地雷，退6格", _PlayersNames[playerIndex]);
+                            _PlayerPos[playerIndex] -= 6;
+                            break;
+                        case 3:
+                            Console.WriteLine("玩家{0}踩到了暂停，暂停一回合", _PlayersNames[playerIndex]);
+                            _PlayersFlag[playerIndex] = false;
+                            break;
+                        case 4:
+                            Console.WriteLine("玩家{0}踩到了时空隧道，前进10格", _PlayersNames[playerIndex]);
+                            _PlayerPos[playerIndex] += 10;
+                            break;
+                        default:
+                            Console.WriteLine("玩家{0}踩到了普通方块", _PlayersNames[playerIndex]);
+                            break;
+                    }
                 }
+                catch { }
             }
-            #region 任一玩家的位置后退出地图时(位置<0)，回到地图原点
+            Console.ReadKey(true);
+            #region 任一玩家的位置超出地图时，回到正确位置
+            // 后退超出地图(位置<0)
             if (_PlayerPos[playerIndex] < 0) _PlayerPos[playerIndex] = 0;
             if (_PlayerPos[1 - playerIndex] < 0) _PlayerPos[1 - playerIndex] = 0;
+
+            //前进超出地图(位置>99)
+            if (_PlayerPos[playerIndex] > 99) _PlayerPos[playerIndex] = 99;
+            if (_PlayerPos[1 - playerIndex] > 99) _PlayerPos[1 - playerIndex] = 99;
             #endregion
             Console.Clear();
             DrawMap();
+        }
+
+        /// <summary>
+        /// "胜利"文字
+        /// </summary>
+        public static void Win()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("                                          ◆                      ");
+            Console.WriteLine("                    ■                  ◆               ■        ■");
+            Console.WriteLine("      ■■■■  ■  ■                ◆■         ■    ■        ■");
+            Console.WriteLine("      ■    ■  ■  ■              ◆  ■         ■    ■        ■");
+            Console.WriteLine("      ■    ■ ■■■■■■       ■■■■■■■   ■    ■        ■");
+            Console.WriteLine("      ■■■■ ■   ■                ●■●       ■    ■        ■");
+            Console.WriteLine("      ■    ■      ■               ● ■ ●      ■    ■        ■");
+            Console.WriteLine("      ■    ■ ■■■■■■         ●  ■  ●     ■    ■        ■");
+            Console.WriteLine("      ■■■■      ■             ●   ■   ■    ■    ■        ■");
+            Console.WriteLine("      ■    ■      ■            ■    ■         ■    ■        ■");
+            Console.WriteLine("      ■    ■      ■                  ■               ■        ■ ");
+            Console.WriteLine("     ■     ■      ■                  ■           ●  ■          ");
+            Console.WriteLine("    ■    ■■ ■■■■■■             ■              ●         ●");
+            Console.ResetColor();
         }
 
     }
