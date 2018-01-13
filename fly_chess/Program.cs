@@ -19,7 +19,23 @@ namespace fly_chess
             ShowHeadText();
             InitialMap();
             DrawMap();
+
+            Console.WriteLine("请输入玩家A的名称");
+            _PlayersNames[0] = Console.ReadLine();
+            while (_PlayersNames[0] == "")
+            {
+                Console.WriteLine("玩家A的名称不能为空！ 请重新输入");
+                _PlayersNames[0] = Console.ReadLine();
+            }
+
+            while (true)
+            {
+                PlayGame(0);
+                PlayGame(1);
+            }
             
+
+
             Console.ReadKey();
         }
 
@@ -127,6 +143,11 @@ namespace fly_chess
             for(int i = 70; i < 100; i++) Console.Write(GetPattenStr(i));
         }
 
+
+        public static void PlayGame(int playerIndex)
+        {
+
+        }
         
     }
 }
